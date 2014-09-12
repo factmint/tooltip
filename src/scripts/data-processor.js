@@ -10,11 +10,11 @@ define(function() {
           value;
 
       // Get the table column headers
-      keys = Array.prototype.map.call( container.rows[0].cells, function( cell ){
-        return cell.textContent;
+      ds.keys = {};
+      Array.prototype.forEach.call( container.rows[0].cells, function( cell, index ){
+        ds.keys[ cell.textContent ] = index;
       } );
-      ds.keys = keys.slice(0);
-      ll = keys.length;
+      ll = container.rows[0].cells.length;
 
       l = container.rows.length;
       // Minus the column header
