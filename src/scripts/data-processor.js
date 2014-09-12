@@ -18,16 +18,16 @@ define(function() {
 
       l = container.rows.length;
       // Minus the column header
-      ds.series = new Array( l - 1 );
+      ds.rows = new Array( l - 1 );
       while( ++i < l ){
-        ds.series[ i - 1 ] = new Array( ll );
+        ds.rows[ i - 1 ] = new Array( ll );
         ii = -1;
         while( ++ii < ll ){
           value = container.rows[i].cells[ii].textContent;
           if( !isNaN( value ) ){
             value = parseFloat( value, 10 );
           }
-          ds.series[ i - 1 ][ ii ] = value;
+          ds.rows[ i - 1 ][ ii ] = value;
         }
       }
 
@@ -35,7 +35,7 @@ define(function() {
 
       function DataSet(){
         this.keys = null;
-        this.series = null;
+        this.rows = null;
       }
       DataSet.prototype = {
         "constructor": DataSet
