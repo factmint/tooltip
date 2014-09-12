@@ -1,0 +1,18 @@
+{
+  "name": "bubble-chart",
+  "description": "A variation on the scatter chart that also includes a third variable mapped onto the area of the circle", 
+  "version": "0.0.0",
+  "devDependencies": {
+  	"bower": "1.3.*",
+  	"grunt": "0.4.*",
+  	"grunt-contrib-watch": "0.6.*",
+  	"grunt-contrib-concat": "0.5.*",
+    "grunt-contrib-connect": "0.8.*",
+    "grunt-contrib-copy": "0.5.*",
+    "grunt-contrib-clean": "0.6.0",
+    "grunt-contrib-qunit": "0.5.*",
+  	"grunt-sass": "0.14.*",
+    "grunt-closure-compiler": "0.0.*",
+    "grunt-autoprefixer": "0.8.*"
+  }
+}

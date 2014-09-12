@@ -1,0 +1,45 @@
+/*!
+ * Styles for Snap.svg plugin: bubble-chart
+ */
+
+/* ==========================================================================
+  Configuration
+   ========================================================================== */
+
+@import 'variables';
+@import 'classes';
+
+/* ==========================================================================
+   Plugin style definitions
+   ========================================================================== */
+
+.fm-hidden {
+  display: none;
+}
+
+.fm-scale {
+  fill: none;
+}
+
+.fm-x-axis {
+  shape-rendering: crispEdges;
+
+  .fm-axis {
+    stroke: #808080;
+    stroke-width: 1px;
+  }
+
+}
+
+.fm-y-axis {
+
+}
+
+.fm-tick-mark {
+
+}
+
+.fm-grid-line {
+  shape-rendering: crispEdges;  
+  stroke: #B3B3B3;
+}
