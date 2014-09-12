@@ -25,11 +25,10 @@ function(Config,   DataProcessor,    bubbleChart) {
       containers[i].appendChild(svgNode);
 
       var paper = Snap(svgNode);
-      // var data = DataProcessor.tableToJSON(containers[i].querySelector("table"));
-      // console.log(data);
+      var data = DataProcessor.tableToJSON(containers[i].querySelector("table"));
 
       svgNode.setAttribute("viewBox", "0 0 " + (width + spillOverMargin * 2) + " " + (height + spillOverMargin * 2));
-      paper.bubbleChart( 10, 10, 500, 400);
+      paper.bubbleChart( 10, 10, 500, 400, data);
     }
   };
 });
