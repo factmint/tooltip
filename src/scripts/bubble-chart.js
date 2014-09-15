@@ -37,7 +37,7 @@ function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
           radiusIndex = dataSet.keys[ radiusKey ],
           xValue = 0, yValue = 0, radiusValue = 0;
 
-      radiusScale = new ScaleUtils.Scale( 0, 1000, radiusRange.min, radiusRange.max );
+      radiusScale = new ScaleUtils.Scale( Config.BUBBLE_MIN_AREA, Config.BUBBLE_MAX_AREA, radiusRange.min, radiusRange.max );
 
       var pointGroup = paper.g();
       dataSet.rows.forEach(function( row ){

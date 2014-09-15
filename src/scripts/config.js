@@ -12,6 +12,9 @@ define(function() {
     // Range setting
     X_RANGE_PADDING: 0.1, // This constricts a range so start and points are not at the very ends of the axis
     // Scatter point (dot) settings
-    DOT_SIZE: 5
+    DOT_SIZE: 5,
+    // Bubble chart area settings
+    BUBBLE_MIN_AREA: 0,
+    BUBBLE_MAX_AREA: 1000
   }
 });
