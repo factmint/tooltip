@@ -1,19 +1,24 @@
-define( ['snap', 'config', 'scale-utils', 'color-utils', 'axis', 'grid-lines', 'bubble-point'], 
-function( Snap, Config, ScaleUtils, Color, axis, gridLines, bubblePoint ){
+define( ['snap', 'config', 'scale-utils', 'color-utils', 'axis', 'grid-lines', 'bubble-point', 'grouped-tooltip'], 
+function( Snap, Config, ScaleUtils, Color, axis, gridLines, bubblePoint, GroupedTooltip ){
 
   return Snap.plugin(function( Snap, Element, Paper ){
 
     Paper.prototype.bubbleChart = function( startX, startY, width, height, dataSet ){
 
       var paper = this,
+          // Keys
           xKey = "has GINI",
           yKey = "has HDI",
           radiusKey = "has Population",
+          // Ranges
           xRange = dataSet.getRange( xKey ),
           yRange = dataSet.getRange( yKey ),
           radiusRange = dataSet.getRange( radiusKey ),
+          // Axes
           xAxis, yAxis,
+          // Scales
           xScale, yScale, radiusScale,
+          // Other bits
           gridLines,
           yOffsetX = 0,
           bubbleChart = paper.g(),
