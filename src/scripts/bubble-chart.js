@@ -3,12 +3,17 @@ function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
 
   return Snap.plugin(function( Snap, Element, Paper ){
 
-    Paper.prototype.bubbleChart = function( startX, startY, width, height, data ){
+    Paper.prototype.bubbleChart = function( startX, startY, width, height, dataSet ){
 
       var paper = this,
-          xRange = getXRange(),
-          yRange = getYRange(),
+          xKey = "has GINI",
+          yKey = "has HDI",
+          radiusKey = "has Population",
+          xRange = dataSet.getRange( xKey ),
+          yRange = dataSet.getRange( yKey ),
+          radiusRange = dataSet.getRange( radiusKey ),
           xAxis, yAxis,
+          xScale, yScale, radiusScale,
           gridLines,
           yOffsetX = 0,
           bubbleChart = paper.g();
@@ -26,10 +31,30 @@ function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
       gridLines = paper.gridLines( startX, startY, yAxis.startPoints, xAxis.getBBox().width, 'horizontal');
       gridLines.transform( "t " + yOffsetX + " 0" );
 
+      // Draw the bubbles
+      var xIndex = dataSet.keys[ xKey ],
+          yIndex = dataSet.keys[ yKey ],
+          radiusIndex = dataSet.keys[ radiusKey ],
+          xValue = 0, yValue = 0, radiusValue = 0;
+
+      radiusScale = new ScaleUtils.Scale( 0, 1000, radiusRange.min, radiusRange.max );
+
+      var pointGroup = paper.g();
+      dataSet.rows.forEach(function( row ){
+
+        xValue = row[ xIndex ];
+        yValue = row[ yIndex ];
+        radiusValue = row[ radiusIndex ];
+
+        pointGroup.append( paper.bubblePoint( xScale.getPixel( xValue ), yScale.getPixel( yValue ), radiusScale.getPixel( radiusValue ) ) );
+
+      });
+
       // Append to group
       bubbleChart.append( yAxis );
       bubbleChart.append( xAxis );
       bubbleChart.append( gridLines );
+      bubbleChart.append( pointGroup );
 
       return bubbleChart;
 
@@ -58,14 +83,14 @@ function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
             var tickRange = tickMax - tickMin;
             axisCls = "fm-x-axis";
             tickSize = Config.SMALL_MARKER_SIZE;
-            scale = new ScaleUtils.Scale( x, length, tickMin - tickRange * Config.X_RANGE_PADDING, tickMax + tickRange * 0.1 );
+            scale = xScale = new ScaleUtils.Scale( x, length, tickMin - tickRange * Config.X_RANGE_PADDING, tickMax + tickRange * 0.1 );
             break;
 
           case "vertical":
             axisCls = "fm-y-axis";
             tickSize = length;
             // Swap the max and min so min sits at the bottom rather than top
-            scale = new ScaleUtils.Scale( y, length, tickMax, tickMin );
+            scale = yScale = new ScaleUtils.Scale( y, length, tickMax, tickMin );
             break;
 
         }
@@ -84,21 +109,6 @@ function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
         return axis;
 
       }
-
-      function getXRange() {
-        return {
-          "min": -100,
-          "max": 270
-        }
-      }
-
-      function getYRange() {
-        return {
-          "min": -40,
-          "max": 300
-        }
-      }
-
 
     };
 
