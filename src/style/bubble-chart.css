@@ -117,3 +117,6 @@
 
 .fm-scatter-bubble {
   fill-opacity: 0.2; }
+  .fm-scatter-bubble:hover, .fm-scatter-bubble.fm-scatter-bubble--active {
+    fill-opacity: 0.6;
+    stroke-width: 2px; }
