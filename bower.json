@@ -12,7 +12,8 @@
     "scale-utils": "https://git.assembla.com/descartes_diaphragm.scale-utilities.git",
     "number-utils": "https://git.assembla.com/descartes_diaphragm.number-utils.git",
     "bubble-point": "https://git.assembla.com/descartes_diaphragm.bubble-point.git",
-    "color-utils": "https://git.assembla.com/descartes_diaphragm.color-utils.git"
+    "color-utils": "https://git.assembla.com/descartes_diaphragm.color-utils.git",
+    "grouped-tooltip": "https://git.assembla.com/descartes_diaphragm.grouped-tooltip.git"
   },
   "devDependencies": {
     "qunit": "~1.15.0",

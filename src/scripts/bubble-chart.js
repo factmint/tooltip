@@ -58,7 +58,11 @@ function( Snap, Config, ScaleUtils, Color, axis, gridLines, bubblePoint, Grouped
 
         pointBubble = paper.bubblePoint( xScale.getPixel( xValue ), yScale.getPixel( yValue ), radiusScale.getPixel( radiusValue ) );
         pointBubble.addClass( bubbleColors[ index ] )
-                .attr("stroke", pointBubble.attr("fill"));
+                .attr("stroke", pointBubble.attr("fill"))
+                .data( "row", row )
+                .data( "dataset", dataSet );
+
+        setupBubbleEvents( pointBubble );
 
         pointGroup.append( pointBubble );
 
@@ -123,6 +127,58 @@ function( Snap, Config, ScaleUtils, Color, axis, gridLines, bubblePoint, Grouped
         return axis;
 
       }
+
+      /**
+       * THIS NEEDS TIDYING
+       */
+      function onBubbleClick(){
+
+        var tooltip = this.data("tooltip");
+
+        if( this.hasClass("fm-scatter-bubble--active") ){
+
+          this.removeClass("fm-scatter-bubble--active");
+          tooltip.hide();
+
+        } else {
+
+          var data = this.data("row"),
+              dataset = this.data("dataset");
+
+            console.log(data,dataset);
+
+          if( !tooltip ){
+            tooltip = new GroupedTooltip( paper.node.parentNode );
+            tooltip.render({
+              "groups": [{
+                "Size": 10
+              }],
+              "title": "example title"
+            });
+            this.data("tooltip", tooltip);
+          }
+
+          this.addClass("fm-scatter-bubble--active");
+          var pos = this.node.getBoundingClientRect();
+          tooltip.setPosition( pos.left, pos.top );
+          tooltip.show();
+
+        }
+
+      }
+
+
+      /**
+       * Adds any events to the bubble point
+       * @param  {Snap.Circle} bubblePoint
+       * @param  {Array} data        
+       */
+      function setupBubbleEvents( bubblePoint ){
+        
+        bubblePoint.click( onBubbleClick );
+        
+      }
+
 
     };
 
