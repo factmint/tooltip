@@ -1,5 +1,5 @@
-define( ['snap', 'config', 'scale-utils', 'axis', 'grid-lines', 'bubble-point'], 
-function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
+define( ['snap', 'config', 'scale-utils', 'color-utils', 'axis', 'grid-lines', 'bubble-point'], 
+function( Snap, Config, ScaleUtils, Color, axis, gridLines, bubblePoint ){
 
   return Snap.plugin(function( Snap, Element, Paper ){
 
@@ -16,7 +16,8 @@ function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
           xScale, yScale, radiusScale,
           gridLines,
           yOffsetX = 0,
-          bubbleChart = paper.g();
+          bubbleChart = paper.g(),
+          bubbleColors = null;
 
       // Render the y axis
       yAxis = drawAxis( yRange, startX, startY, height, "vertical", "asd" );
@@ -31,6 +32,9 @@ function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
       gridLines = paper.gridLines( startX, startY, yAxis.startPoints, xAxis.getBBox().width, 'horizontal');
       gridLines.transform( "t " + yOffsetX + " 0" );
 
+       // Generate the colours
+      bubbleColors = Color.harmonious( dataSet.rows.length );
+
       // Draw the bubbles
       var xIndex = dataSet.keys[ xKey ],
           yIndex = dataSet.keys[ yKey ],
@@ -39,14 +43,19 @@ function( Snap, Config, ScaleUtils, axis, gridLines, bubblePoint ){
 
       radiusScale = new ScaleUtils.Scale( Config.BUBBLE_MIN_AREA, Config.BUBBLE_MAX_AREA, radiusRange.min, radiusRange.max );
 
-      var pointGroup = paper.g();
-      dataSet.rows.forEach(function( row ){
+      var pointGroup = paper.g(),
+          pointBubble;
+      dataSet.rows.forEach(function( row, index ){
 
         xValue = row[ xIndex ];
         yValue = row[ yIndex ];
         radiusValue = row[ radiusIndex ];
 
-        pointGroup.append( paper.bubblePoint( xScale.getPixel( xValue ), yScale.getPixel( yValue ), radiusScale.getPixel( radiusValue ) ) );
+        pointBubble = paper.bubblePoint( xScale.getPixel( xValue ), yScale.getPixel( yValue ), radiusScale.getPixel( radiusValue ) );
+        pointBubble.addClass( bubbleColors[ index ] )
+                .attr("stroke", pointBubble.attr("fill"));
+
+        pointGroup.append( pointBubble );
 
       });
 

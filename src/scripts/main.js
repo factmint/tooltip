@@ -6,7 +6,8 @@ require.config({
     "scale-utils": "../../bower_components/scale-utils/dist/scale-utils",
     "number-utils": "../../bower_components/number-utils/dist/number-utils",
     "tick-mark": "../../bower_components/tick-mark/dist/tick-mark",
-    "bubble-point": "../../bower_components/bubble-point/dist/bubble-point"
+    "bubble-point": "../../bower_components/bubble-point/dist/bubble-point",
+    "color-utils": "../../bower_components/color-utils/dist/color"
   },
   shim: {
     "snap": {
