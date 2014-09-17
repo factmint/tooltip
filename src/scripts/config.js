@@ -15,6 +15,9 @@ define(function() {
     DOT_SIZE: 5,
     // Bubble chart area settings
     BUBBLE_MIN_AREA: 0,
-    BUBBLE_MAX_AREA: 1000
+    BUBBLE_MAX_AREA: 1000,
+    // Tooltip
+    TOOLTIP_OFFSET_X: 20,
+    TOOLTIP_OFFSET_Y: 0
   }
 });
