@@ -2,11 +2,13 @@ define(["Config"], function( Config ) {
 
   function Tooltip(paper) {
 
-    this._arrow = null;
     this._paper = paper;
     this._parent = paper.node;
+    this._styles = Tooltip.STYLES_PRIMARY;
+    this._tooltipArrow = null;
     this._tooltipBG = null;
     this._tooltipPlacement = "right";
+    this._tooltipText = null;
 
     this.node = null;
 
@@ -21,32 +23,32 @@ define(["Config"], function( Config ) {
      */
     "_positionTooltipArrow": function( tooltipPlacement ){
 
-      var transformMatrix = Snap.matrix(),
-          tooltipBGBBox = this._tooltipBG.getBBox();
+      var transformMatrix = Snap.matrix();
+      var tooltipBGBBox = this._tooltipBG.getBBox();
 
       switch( tooltipPlacement ){
 
         case "left":
-          transformMatrix.translate(tooltipBGBBox.width+5, tooltipBGBBox.height/2);
+          transformMatrix.translate(tooltipBGBBox.width+4, tooltipBGBBox.height/2);
           transformMatrix.rotate(180);
-          this._arrow.transform( transformMatrix.toTransformString() );
+          this._tooltipArrow.transform( transformMatrix.toTransformString() );
           break;
 
         case "right":
-          transformMatrix.translate(-5, tooltipBGBBox.height/2);
-          this._arrow.transform( transformMatrix.toTransformString() );
+          transformMatrix.translate(-4, tooltipBGBBox.height/2);
+          this._tooltipArrow.transform( transformMatrix.toTransformString() );
           break;
 
         case "top":
-          transformMatrix.translate( tooltipBGBBox.width/2, tooltipBGBBox.height+5 );
+          transformMatrix.translate( tooltipBGBBox.width/2, tooltipBGBBox.height+4 );
           transformMatrix.rotate( -90 );
-          this._arrow.transform( transformMatrix.toTransformString() );
+          this._tooltipArrow.transform( transformMatrix.toTransformString() );
           break;
 
         case "bottom":
-          transformMatrix.translate( tooltipBGBBox.width/2, -5 );
+          transformMatrix.translate( tooltipBGBBox.width/2, -4 );
           transformMatrix.rotate( 90 );
-          this._arrow.transform( transformMatrix.toTransformString() );
+          this._tooltipArrow.transform( transformMatrix.toTransformString() );
           break;
 
       }
@@ -59,6 +61,14 @@ define(["Config"], function( Config ) {
      * @constructor
      */
     "constructor": Tooltip,
+
+    /**
+     * Returns the styles of the current tooltip
+     * @return {Object} Styles
+     */
+    "getStyles": function(){
+      return this._styles;
+    },
 
     /**
      * Hides the tooltip
@@ -74,8 +84,9 @@ define(["Config"], function( Config ) {
      * Removes the tooltip from the dom
      */
     "remove": function() {
-      this._arrow = null;
+      this._tooltipArrow = null;
       this._tooltipBG = null;
+      this._tooltipText = null;
       this.node.remove();
       this.node = null;
     },
@@ -103,28 +114,32 @@ define(["Config"], function( Config ) {
         "font-family": Config.FONT_FAMILY,
         "font-size": Config.TEXT_SIZE_SMALL
       });
+      this._tooltipText = tooltipText;
 
       // Render the background
       tmpBBox = tooltipText.getBBox();
       var tooltipBG = paper.rect( 0, 0, tmpBBox.width + 20, tmpBBox.height + 20, 4, 4 );
       tooltipBG.attr({
-        "fill": "#333"
+        "fill": "#3C3C3C"
       });
       this._tooltipBG = tooltipBG;
 
       // Render the arrow
-      tmpBBox = tooltipBG.getBBox();
-      var tooltipArrow = paper.polygon([-5,0.2,5,-5,5,5]);
+      var tooltipArrow = paper.polygon([-3.5,0.2,6.5,-5,6.5,5]);
+      var tooltipArrowMask = paper.rect(-6,-6,11,12).attr("fill", "#fff");
       tooltipArrow.attr({
-        "fill": "#333"
+        "fill": "#3C3C3C",
+        "mask": tooltipArrowMask
       });
-      this._arrow = tooltipArrow;
+      this._tooltipArrow = tooltipArrow;
       this._positionTooltipArrow( this._tooltipPlacement );
 
       // Add to the group
       this.node.append( tooltipBG );
       this.node.append( tooltipText );
       this.node.append( tooltipArrow );
+
+      this.setStyles( this._styles );
 
       this.hide();
 
@@ -148,7 +163,7 @@ define(["Config"], function( Config ) {
         this._positionTooltipArrow( tooltipPlacement );
       }
 
-      var tooltipArrowBBox = this._arrow.getBBox(),
+      var tooltipArrowBBox = this._tooltipArrow.getBBox(),
           tooltipBGBBox = this._tooltipBG.getBBox();
 
       switch( tooltipPlacement ){
@@ -180,6 +195,30 @@ define(["Config"], function( Config ) {
     },
 
     /**
+     * Sets the styles of the tooltip
+     * @param  {Object} styles
+     */
+    "setStyles": function( styles ){
+
+      if( styles === undefined ){ return; }
+
+      if( typeof styles.arrow === "object" ){
+        this._tooltipArrow.attr( styles.arrow );
+      }
+
+      if( typeof styles.background === "object" ){
+        this._tooltipBG.attr( styles.background );
+      }
+
+      if( typeof styles.text === "object" ){
+        this._tooltipText.attr( styles.text );
+      }
+
+      this._styles = styles;
+
+    },
+
+    /**
      * Show the tooltip
      */
     "show": function() {
@@ -190,6 +229,36 @@ define(["Config"], function( Config ) {
       this.node.attr("display", "block");
     }
 
+  };
+
+  Tooltip.STYLES_PRIMARY = {
+    "arrow": {
+      "fill": "#3C3C3C",
+      "stroke": "none"
+    },
+    "background": {
+      "fill": "#3C3C3C",
+      "stroke": "none"
+    },
+    "text": {
+      "fill": "#fff"
+    }
+  };
+
+  Tooltip.STYLES_SECONDARY = {
+    "arrow": {
+      "fill": "#fff",
+      "stroke": "#3C3C3C",
+      "stroke-width": "2px"
+    },
+    "background": {
+      "fill": "#fff",
+      "stroke": "#3C3C3C",
+      "stroke-width": "2px"
+    },
+    "text": {
+      "fill": "#3C3C3C"
+    }
   };
 
   return Tooltip;
