@@ -80,8 +80,6 @@ define(["Config"], function( Config ) {
         return;
       }
 
-      var tooltipBG = this.node.node.children[0];
-
       if( tooltipPlacement === undefined ){
         tooltipPlacement = this._tooltipPlacement;
       } else {
@@ -99,14 +97,14 @@ define(["Config"], function( Config ) {
           transformMatrix.rotate(180);
           tooltipArrow.transform( transformMatrix.toTransformString() );
           x = x - Config.TOOLTIP_OFFSET_X - tooltipBGBBox.width;
-          y = y + Config.TOOLTIP_OFFSET_Y - tooltipBG.getBBox().height/2;
+          y = y + Config.TOOLTIP_OFFSET_Y - tooltipBGBBox.height/2;
           break;
 
         case "right":
           transformMatrix.translate(-5, tooltipBGBBox.height/2);
           tooltipArrow.transform( transformMatrix.toTransformString() );
           x = x + Config.TOOLTIP_OFFSET_X;
-          y = y + Config.TOOLTIP_OFFSET_Y - tooltipBG.getBBox().height/2;
+          y = y + Config.TOOLTIP_OFFSET_Y - tooltipBGBBox.height/2;
           break;
         
         case "bottom":
