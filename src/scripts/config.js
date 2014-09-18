@@ -17,7 +17,7 @@ define(function() {
     BUBBLE_MIN_AREA: 0,
     BUBBLE_MAX_AREA: 1000,
     // Tooltip
-    TOOLTIP_OFFSET_X: 20,
-    TOOLTIP_OFFSET_Y: 0
+    TOOLTIP_OFFSET_X: 10,
+    TOOLTIP_OFFSET_Y: 20
   }
 });

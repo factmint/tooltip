@@ -14,6 +14,42 @@ define(["Config"], function( Config ) {
 
   Tooltip.prototype = {
 
+    "_positionTooltipArrow": function( tooltipPlacement ){
+
+      var transformMatrix = Snap.matrix(),
+          tooltipBGBBox = this._tooltipBG.getBBox();
+
+      switch( tooltipPlacement ){
+
+        case "left":
+          transformMatrix.translate(tooltipBGBBox.width+5, tooltipBGBBox.height/2);
+          transformMatrix.rotate(180);
+          this._arrow.transform( transformMatrix.toTransformString() );
+          break;
+
+        case "right":
+          transformMatrix.translate(-5, tooltipBGBBox.height/2);
+          this._arrow.transform( transformMatrix.toTransformString() );
+          break;
+
+        case "top":
+          transformMatrix.translate( tooltipBGBBox.width/2, tooltipBGBBox.height+5 );
+          transformMatrix.rotate( -90 );
+          this._arrow.transform( transformMatrix.toTransformString() );
+          break;
+
+        case "bottom":
+          transformMatrix.translate( tooltipBGBBox.width/2, -5 );
+          transformMatrix.rotate( 90 );
+          this._arrow.transform( transformMatrix.toTransformString() );
+          break;
+
+      }
+
+      this._tooltipPlacement = tooltipPlacement;
+
+    },
+
     "constructor": Tooltip,
 
     "hide": function() {
@@ -59,11 +95,11 @@ define(["Config"], function( Config ) {
       // Render the arrow
       tmpBBox = tooltipBG.getBBox();
       var tooltipArrow = paper.polygon([-5,0.2,5,-5,5,5]);
-      tooltipArrow.transform("t-5," + tmpBBox.height/2);
       tooltipArrow.attr({
         "fill": "#333"
       });
       this._arrow = tooltipArrow;
+      this._positionTooltipArrow( this._tooltipPlacement );
 
       // Add to the group
       this.node.append( tooltipBG );
@@ -82,50 +118,39 @@ define(["Config"], function( Config ) {
 
       if( tooltipPlacement === undefined ){
         tooltipPlacement = this._tooltipPlacement;
-      } else {
-        this._tooltipPlacement = tooltipPlacement;
+      } else if( tooltipPlacement !== this._tooltipPlacement ) {
+        this._positionTooltipArrow( tooltipPlacement );
       }
 
-      var tooltipArrow = this._arrow,
-          tooltipBGBBox = this._tooltipBG.getBBox(),
-          transformMatrix = Snap.matrix();
+      var tooltipArrowBBox = this._arrow.getBBox(),
+          tooltipBGBBox = this._tooltipBG.getBBox();
 
       switch( tooltipPlacement ){
 
         case "left":
-          transformMatrix.translate(tooltipBGBBox.width+5, tooltipBGBBox.height/2);
-          transformMatrix.rotate(180);
-          tooltipArrow.transform( transformMatrix.toTransformString() );
-          x = x - Config.TOOLTIP_OFFSET_X - tooltipBGBBox.width;
-          y = y + Config.TOOLTIP_OFFSET_Y - tooltipBGBBox.height/2;
+          x = x - tooltipArrowBBox.width - tooltipBGBBox.width - Config.TOOLTIP_OFFSET_X;
+          y = y - tooltipBGBBox.height/2;
           break;
 
         case "right":
-          transformMatrix.translate(-5, tooltipBGBBox.height/2);
-          tooltipArrow.transform( transformMatrix.toTransformString() );
-          x = x + Config.TOOLTIP_OFFSET_X;
-          y = y + Config.TOOLTIP_OFFSET_Y - tooltipBGBBox.height/2;
+          x = x + tooltipArrowBBox.width + Config.TOOLTIP_OFFSET_X;
+          y = y - tooltipBGBBox.height/2;
           break;
         
         case "bottom":
-          transformMatrix.translate( tooltipBGBBox.width/2, -5 );
-          transformMatrix.rotate( 90 );
-          tooltipArrow.transform( transformMatrix.toTransformString() );
           x = x - tooltipBGBBox.width/2;
-          y = y + 30;
+          y = y + tooltipArrowBBox.height + Config.TOOLTIP_OFFSET_Y;
           break;
 
         case "top":
-          transformMatrix.translate( tooltipBGBBox.width/2, tooltipBGBBox.height+5 );
-          transformMatrix.rotate( -90 );
-          tooltipArrow.transform( transformMatrix.toTransformString() );
           x = x - tooltipBGBBox.width/2;
-          y = y - tooltipBGBBox.height - 20;
+          y = y - tooltipBGBBox.height - tooltipArrowBBox.height - Config.TOOLTIP_OFFSET_Y + 10;
           break;
 
       }
 
       this.node.transform("T" + x + "," + y );
+
     },
 
     "show": function() {
