@@ -109,10 +109,20 @@ define(["Config"], function( Config ) {
           y = y + Config.TOOLTIP_OFFSET_Y - tooltipBG.getBBox().height/2;
           break;
         
-        case "top":
+        case "bottom":
+          transformMatrix.translate( tooltipBGBBox.width/2, -5 );
+          transformMatrix.rotate( 90 );
+          tooltipArrow.transform( transformMatrix.toTransformString() );
+          x = x - tooltipBGBBox.width/2;
+          y = y + 30;
           break;
 
-        case "bottom":
+        case "top":
+          transformMatrix.translate( tooltipBGBBox.width/2, tooltipBGBBox.height+5 );
+          transformMatrix.rotate( -90 );
+          tooltipArrow.transform( transformMatrix.toTransformString() );
+          x = x - tooltipBGBBox.width/2;
+          y = y - tooltipBGBBox.height - 20;
           break;
 
       }

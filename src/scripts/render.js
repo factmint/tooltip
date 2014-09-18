@@ -42,12 +42,12 @@ function(Config, Snap, Tooltip) {
         "fill": "#f00"
       });
 
-      var topCircle = paper.circle( 200, 200, 20 ).attr({
+      var bottomCircle = paper.circle( 200, 200, 20 ).attr({
         "cursor": "pointer",
         "fill": "#f00"
       });
 
-      var bottomCircle = paper.circle( 300, 200, 20 ).attr({
+      var topCircle = paper.circle( 300, 200, 20 ).attr({
         "cursor": "pointer",
         "fill": "#f00"
       });
@@ -76,7 +76,29 @@ function(Config, Snap, Tooltip) {
         tooltip.hide();
       });
 
+      bottomCircle.mouseover(function( e ){
+        tooltip.render("Tooltip placed below", "<9000");
+        tooltip.setPosition( e.offsetX, e.offsetY, "bottom" );
+        tooltip.show();
+      });
+      bottomCircle.mousemove(function( e ){
+        tooltip.setPosition( e.offsetX, e.offsetY );
+      });
+      bottomCircle.mouseout(function(){
+        tooltip.hide();
+      });
 
+      topCircle.mouseover(function( e ){
+        tooltip.render("Tooltip placed above", "<9000");
+        tooltip.setPosition( e.offsetX, e.offsetY, "top" );
+        tooltip.show();
+      });
+      topCircle.mousemove(function( e ){
+        tooltip.setPosition( e.offsetX, e.offsetY );
+      });
+      topCircle.mouseout(function(){
+        tooltip.hide();
+      });
 
 
     }
