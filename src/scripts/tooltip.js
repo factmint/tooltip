@@ -14,6 +14,11 @@ define(["Config"], function( Config ) {
 
   Tooltip.prototype = {
 
+    /**
+     * Repositions the arrow based on the tooltipPlacement
+     * @private
+     * @param  {String} tooltipPlacement Can be left, right, top or bottom
+     */
     "_positionTooltipArrow": function( tooltipPlacement ){
 
       var transformMatrix = Snap.matrix(),
@@ -50,8 +55,14 @@ define(["Config"], function( Config ) {
 
     },
 
+    /**
+     * @constructor
+     */
     "constructor": Tooltip,
 
+    /**
+     * Hides the tooltip
+     */
     "hide": function() {
       if (!this.node) {
         return;
@@ -59,12 +70,21 @@ define(["Config"], function( Config ) {
       this.node.attr("display", "none");
     },
 
+    /**
+     * Removes the tooltip from the dom
+     */
     "remove": function() {
       this._arrow = null;
+      this._tooltipBG = null;
       this.node.remove();
       this.node = null;
     },
 
+    /**
+     * Renders the tooltip
+     * @param  {String/Number} name  
+     * @param  {String/Number} value
+     */
     "render": function(name, value) {
 
       var paper = this._paper;
@@ -110,6 +130,12 @@ define(["Config"], function( Config ) {
 
     },
 
+    /**
+     * Sets the position for the tooltip to go
+     * @param  {Number} x                
+     * @param  {Number} y                
+     * @param  {String} tooltipPlacement The position for the tooltip to go
+     */
     "setPosition": function(x, y, tooltipPlacement) {
 
       if (!this.node) {
@@ -153,6 +179,9 @@ define(["Config"], function( Config ) {
 
     },
 
+    /**
+     * Show the tooltip
+     */
     "show": function() {
       if (!this.node) {
         return;
