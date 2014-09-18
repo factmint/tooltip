@@ -107,7 +107,7 @@ define(["Config"], function( Config ) {
       this.node = paper.g();
 
       // Render the text
-      var tooltipText = paper.text( 10, 10, name + ": " + value );
+      var tooltipText = paper.text( Config.TOOLTIP_PADDING_LEFT, Config.TOOLTIP_PADDING_TOP, name + ": " + value );
       tooltipText.attr({
         "dy": parseInt(Config.TEXT_SIZE_SMALL,10),
         "fill": "#fff",
@@ -118,7 +118,7 @@ define(["Config"], function( Config ) {
 
       // Render the background
       tmpBBox = tooltipText.getBBox();
-      var tooltipBG = paper.rect( 0, 0, tmpBBox.width + 20, tmpBBox.height + 20, 4, 4 );
+      var tooltipBG = paper.rect( 0, 0, tmpBBox.width + Config.TOOLTIP_PADDING_RIGHT + Config.TOOLTIP_PADDING_LEFT, tmpBBox.height + Config.TOOLTIP_PADDING_TOP + Config.TOOLTIP_PADDING_BOTTOM, Config.TOOLTIP_BORDER_RADIUS );
       tooltipBG.attr({
         "fill": "#3C3C3C"
       });
