@@ -3,9 +3,10 @@ define(["Config"], function( Config ) {
   function Tooltip(paper) {
 
     this._arrow = null;
-    this._orientation = "left";
     this._paper = paper;
     this._parent = paper.node;
+    this._tooltipBG = null;
+    this._tooltipPlacement = "right";
 
     this.node = null;
 
@@ -53,6 +54,7 @@ define(["Config"], function( Config ) {
       tooltipBG.attr({
         "fill": "#333"
       });
+      this._tooltipBG = tooltipBG;
 
       // Render the arrow
       tmpBBox = tooltipBG.getBBox();
@@ -68,9 +70,11 @@ define(["Config"], function( Config ) {
       this.node.append( tooltipText );
       this.node.append( tooltipArrow );
 
+      this.hide();
+
     },
 
-    "setPosition": function(x, y, orientation) {
+    "setPosition": function(x, y, tooltipPlacement) {
 
       if (!this.node) {
         return;
@@ -78,37 +82,40 @@ define(["Config"], function( Config ) {
 
       var tooltipBG = this.node.node.children[0];
 
-      if( orientation === undefined ){
-        orientation = "left";
+      if( tooltipPlacement === undefined ){
+        tooltipPlacement = this._tooltipPlacement;
+      } else {
+        this._tooltipPlacement = tooltipPlacement;
       }
 
-      if( orientation !== this._orientation ){
+      var tooltipArrow = this._arrow,
+          tooltipBGBBox = this._tooltipBG.getBBox(),
+          transformMatrix = Snap.matrix();
 
-        var tooltipArrow = this._arrow;
+      switch( tooltipPlacement ){
 
-        switch( orientation ){
+        case "left":
+          transformMatrix.translate(tooltipBGBBox.width+5, tooltipBGBBox.height/2);
+          transformMatrix.rotate(180);
+          tooltipArrow.transform( transformMatrix.toTransformString() );
+          x = x - Config.TOOLTIP_OFFSET_X - tooltipBGBBox.width;
+          y = y + Config.TOOLTIP_OFFSET_Y - tooltipBG.getBBox().height/2;
+          break;
 
-          case "left":
+        case "right":
+          transformMatrix.translate(-5, tooltipBGBBox.height/2);
+          tooltipArrow.transform( transformMatrix.toTransformString() );
+          x = x + Config.TOOLTIP_OFFSET_X;
+          y = y + Config.TOOLTIP_OFFSET_Y - tooltipBG.getBBox().height/2;
+          break;
+        
+        case "top":
+          break;
 
-            break;
-
-          case "right":
-            break;
-
-          case "top":
-            break;
-
-          case "bottom":
-            break;
-
-        }
-
-        this._orientation = orientation;
+        case "bottom":
+          break;
 
       }
-
-      x = x + Config.TOOLTIP_OFFSET_X;
-      y = y + Config.TOOLTIP_OFFSET_Y - tooltipBG.getBBox().height/2;
 
       this.node.transform("T" + x + "," + y );
     },

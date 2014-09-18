@@ -31,21 +31,48 @@ function(Config, Snap, Tooltip) {
 
       var tooltip = new Tooltip( paper );
       tooltip.render( "Label", "100mm" );
-      tooltip.setPosition( 200, 100 );
 
-      var testCircle = paper.circle( 100, 100, 20 ).attr({
+      var rightCircle = paper.circle( 200, 100, 20 ).attr({
         "cursor": "pointer",
         "fill": "#f00"
       });
 
-      testCircle.mouseover(function( e ){
-        tooltip.setPosition( e.offsetX, e.offsetY );
+      var leftCircle = paper.circle( 300, 100, 20 ).attr({
+        "cursor": "pointer",
+        "fill": "#f00"
+      });
+
+      var topCircle = paper.circle( 200, 200, 20 ).attr({
+        "cursor": "pointer",
+        "fill": "#f00"
+      });
+
+      var bottomCircle = paper.circle( 300, 200, 20 ).attr({
+        "cursor": "pointer",
+        "fill": "#f00"
+      });
+
+      rightCircle.mouseover(function( e ){
+        tooltip.render("Tooltip placed to the right", "<9000");
+        tooltip.setPosition( e.offsetX, e.offsetY, "right" );
         tooltip.show();
       });
-      testCircle.mousemove(function( e ){
+      rightCircle.mousemove(function( e ){
         tooltip.setPosition( e.offsetX, e.offsetY );
       });
-      testCircle.mouseout(function(){
+      rightCircle.mouseout(function(){
+        tooltip.hide();
+      });
+
+      leftCircle.mouseover(function( e ){
+        tooltip.render("Tooltip placed to the left", "<9000");
+        tooltip.setPosition( e.offsetX, e.offsetY, "left" );
+        tooltip.show();
+      });
+      leftCircle.mousemove(function( e ){
+        tooltip.setPosition( e.offsetX, e.offsetY );
+      });
+      leftCircle.mouseout(function(){
         tooltip.hide();
       });
 
