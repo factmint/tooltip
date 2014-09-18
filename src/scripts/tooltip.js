@@ -261,6 +261,25 @@ define(["Config"], function( Config ) {
     }
   };
 
+  var dataColours = ["#ECB53E", "#8AC37E", "#88B25B", "#459C76", "#32AFE5", "#2A7FB9", "#385F8C", "#AE74AF", "#744589", "#A7305D", "#D03B43", "#DC8336"];
+  dataColours.forEach(function( colour, index ){
+
+    Tooltip[ "STYLES_COLOR_WHEEL_" + String.fromCharCode( 65 + index ) ] = {
+      "arrow": {
+        "fill": colour,
+        "stroke": "none"
+      },
+      "background": {
+        "fill": colour,
+        "stroke": "none"
+      },
+      "text": {
+        "fill": "#fff"
+      }
+    };
+
+  });
+
   return Tooltip;
 
 });

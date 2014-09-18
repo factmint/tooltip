@@ -31,7 +31,7 @@ function(Config, Snap, Tooltip) {
 
       var tooltip = new Tooltip( paper );
       tooltip.render( "Label", "100mm" );
-      tooltip.setStyles( Tooltip.STYLES_SECONDARY );
+      tooltip.setStyles( Tooltip.STYLES_COLOR_WHEEL_D );
 
       var rightCircle = paper.circle( 200, 100, 20 ).attr({
         "cursor": "pointer",
