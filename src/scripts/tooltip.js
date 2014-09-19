@@ -1,4 +1,15 @@
-define(["Config"], function( Config ) {
+define(function() {
+
+  var TOOLTIP_OFFSET_X = 10;
+  var TOOLTIP_OFFSET_Y = 20;
+  var TOOLTIP_PADDING_TOP = 10;
+  var TOOLTIP_PADDING_BOTTOM = 10;
+  var TOOLTIP_PADDING_LEFT = 10;
+  var TOOLTIP_PADDING_RIGHT = 10;
+  var TOOLTIP_BORDER_RADIUS = 4;
+
+  var TEXT_SIZE_SMALL = "12px";
+  var FONT_FAMILY = "'Lato', sans-serif";
 
   function Tooltip(paper) {
 
@@ -107,18 +118,18 @@ define(["Config"], function( Config ) {
       this.node = paper.g();
 
       // Render the text
-      var tooltipText = paper.text( Config.TOOLTIP_PADDING_LEFT, Config.TOOLTIP_PADDING_TOP, name + ": " + value );
+      var tooltipText = paper.text( TOOLTIP_PADDING_LEFT, TOOLTIP_PADDING_TOP, name + ": " + value );
       tooltipText.attr({
-        "dy": parseInt(Config.TEXT_SIZE_SMALL,10),
+        "dy": parseInt(TEXT_SIZE_SMALL,10),
         "fill": "#fff",
-        "font-family": Config.FONT_FAMILY,
-        "font-size": Config.TEXT_SIZE_SMALL
+        "font-family": FONT_FAMILY,
+        "font-size": TEXT_SIZE_SMALL
       });
       this._tooltipText = tooltipText;
 
       // Render the background
       tmpBBox = tooltipText.getBBox();
-      var tooltipBG = paper.rect( 0, 0, tmpBBox.width + Config.TOOLTIP_PADDING_RIGHT + Config.TOOLTIP_PADDING_LEFT, tmpBBox.height + Config.TOOLTIP_PADDING_TOP + Config.TOOLTIP_PADDING_BOTTOM, Config.TOOLTIP_BORDER_RADIUS );
+      var tooltipBG = paper.rect( 0, 0, tmpBBox.width + TOOLTIP_PADDING_RIGHT + TOOLTIP_PADDING_LEFT, tmpBBox.height + TOOLTIP_PADDING_TOP + TOOLTIP_PADDING_BOTTOM, TOOLTIP_BORDER_RADIUS );
       tooltipBG.attr({
         "fill": "#3C3C3C"
       });
@@ -169,23 +180,23 @@ define(["Config"], function( Config ) {
       switch( tooltipPlacement ){
 
         case "left":
-          x = x - tooltipArrowBBox.width - tooltipBGBBox.width - Config.TOOLTIP_OFFSET_X;
+          x = x - tooltipArrowBBox.width - tooltipBGBBox.width - TOOLTIP_OFFSET_X;
           y = y - tooltipBGBBox.height/2;
           break;
 
         case "right":
-          x = x + tooltipArrowBBox.width + Config.TOOLTIP_OFFSET_X;
+          x = x + tooltipArrowBBox.width + TOOLTIP_OFFSET_X;
           y = y - tooltipBGBBox.height/2;
           break;
         
         case "bottom":
           x = x - tooltipBGBBox.width/2;
-          y = y + tooltipArrowBBox.height + Config.TOOLTIP_OFFSET_Y;
+          y = y + tooltipArrowBBox.height + TOOLTIP_OFFSET_Y;
           break;
 
         case "top":
           x = x - tooltipBGBBox.width/2;
-          y = y - tooltipBGBBox.height - tooltipArrowBBox.height - Config.TOOLTIP_OFFSET_Y + 10;
+          y = y - tooltipBGBBox.height - tooltipArrowBBox.height - TOOLTIP_OFFSET_Y + 10;
           break;
 
       }
