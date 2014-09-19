@@ -1,16 +1,22 @@
 {
-  "name": "bubble-chart",
+  "name": "Tooltip",
   "version": "0.1.0",
   "authors": [
-  	"Dan Palmer <dan.palmer@telegraph.co.uk>"
+    "Dan.Palmer@telegraph.co.uk"
   ],
-  "description": "A variation on the scatter chart that also includes a third variable mapped onto the area of the circle",
-  "dependencies": {
-  	"Snap.svg": "*"
-  },
-  "devDependencies": {
-    "qunit": "~1.15.0",
-    "requirejs": "~2.1.15"
-  }
+  "description": "Tooltip class that displays a name and value",
+  "main": "dist/Tooltip.js",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "homepage": "http://factmint.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
-
