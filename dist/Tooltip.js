@@ -1,296 +1,286 @@
 define(function() {
 
-  var TOOLTIP_OFFSET_X = 10;
-  var TOOLTIP_OFFSET_Y = 20;
-  var TOOLTIP_PADDING_TOP = 10;
-  var TOOLTIP_PADDING_BOTTOM = 10;
-  var TOOLTIP_PADDING_LEFT = 10;
-  var TOOLTIP_PADDING_RIGHT = 10;
-  var TOOLTIP_BORDER_RADIUS = 4;
+	var TOOLTIP_OFFSET_X = 10;
+	var TOOLTIP_OFFSET_Y = 20;
+	var TOOLTIP_PADDING_TOP = 10;
+	var TOOLTIP_PADDING_BOTTOM = 10;
+	var TOOLTIP_PADDING_LEFT = 10;
+	var TOOLTIP_PADDING_RIGHT = 10;
+	var TOOLTIP_BORDER_RADIUS = 4;
 
-  var TEXT_SIZE_SMALL = "12px";
-  var FONT_FAMILY = "'Lato', sans-serif";
+	var TEXT_SIZE_SMALL = "12px";
+	var FONT_FAMILY = "'Lato', sans-serif";
 
-  function Tooltip(paper) {
+	function Tooltip(paper, colorClass) {
 
-    this._paper = paper;
-    this._parent = paper.node;
-    this._styles = Tooltip.STYLES_PRIMARY;
-    this._tooltipArrow = null;
-    this._tooltipBG = null;
-    this._tooltipPlacement = "right";
-    this._tooltipText = null;
+		this.colorClass = colorClass;
+		this._paper = paper;
+		this._parent = paper.node;
+		this._tooltipArrow = null;
+		this._tooltipBG = null;
+		this._tooltipPlacement = "right";
+		this._tooltipText = null;
 
-    this.node = null;
+		this.node = null;
 
-  }
+	}
 
-  Tooltip.prototype = {
+	Tooltip.prototype = {
 
-    /**
-     * Repositions the arrow based on the tooltipPlacement
-     * @private
-     * @param  {String} tooltipPlacement Can be left, right, top or bottom
-     */
-    "_positionTooltipArrow": function( tooltipPlacement ){
+		/**
+		 * Repositions the arrow based on the tooltipPlacement
+		 * @private
+		 * @param {String} tooltipPlacement Can be left, right, top or bottom
+		 */
+		"_positionTooltipArrow": function(tooltipPlacement) {
 
-      var transformMatrix = Snap.matrix();
-      var tooltipBGBBox = this._tooltipBG.getBBox();
+			var transformMatrix = Snap.matrix();
+			var tooltipBGBBox = this._tooltipBG.getBBox();
 
-      switch( tooltipPlacement ){
+			switch(tooltipPlacement){
 
-        case "left":
-          transformMatrix.translate(tooltipBGBBox.width+4, tooltipBGBBox.height/2);
-          transformMatrix.rotate(180);
-          this._tooltipArrow.transform( transformMatrix.toTransformString() );
-          break;
+				case "left":
+					transformMatrix.translate(tooltipBGBBox.width + 4, tooltipBGBBox.height / 2);
+					transformMatrix.rotate(180);
+					this._tooltipArrow.transform( transformMatrix.toTransformString() );
+					break;
 
-        case "right":
-          transformMatrix.translate(-4, tooltipBGBBox.height/2);
-          this._tooltipArrow.transform( transformMatrix.toTransformString() );
-          break;
+				case "right":
+					transformMatrix.translate(-4, tooltipBGBBox.height / 2);
+					this._tooltipArrow.transform( transformMatrix.toTransformString() );
+					break;
 
-        case "top":
-          transformMatrix.translate( tooltipBGBBox.width/2, tooltipBGBBox.height+4 );
-          transformMatrix.rotate( -90 );
-          this._tooltipArrow.transform( transformMatrix.toTransformString() );
-          break;
+				case "top":
+					transformMatrix.translate(tooltipBGBBox.width / 2, tooltipBGBBox.height + 4);
+					transformMatrix.rotate(-90);
+					this._tooltipArrow.transform(transformMatrix.toTransformString());
+					break;
 
-        case "bottom":
-          transformMatrix.translate( tooltipBGBBox.width/2, -4 );
-          transformMatrix.rotate( 90 );
-          this._tooltipArrow.transform( transformMatrix.toTransformString() );
-          break;
+				case "bottom":
+					transformMatrix.translate(tooltipBGBBox.width / 2, -4);
+					transformMatrix.rotate(90);
+					this._tooltipArrow.transform(transformMatrix.toTransformString());
+					break;
 
-      }
+			}
 
-      this._tooltipPlacement = tooltipPlacement;
+			this._tooltipPlacement = tooltipPlacement;
 
-    },
+		},
 
-    /**
-     * @constructor
-     */
-    "constructor": Tooltip,
+		/**
+		 * @constructor
+		 */
+		"constructor": Tooltip,
 
-    /**
-     * Returns the styles of the current tooltip
-     * @return {Object} Styles
-     */
-    "getStyles": function(){
-      return this._styles;
-    },
+		/**
+		 * Hides the tooltip
+		 */
+		"hide": function() {
+			if (!this.node) {
+				return;
+			}
+			this.node.attr("display", "none");
+		},
 
-    /**
-     * Hides the tooltip
-     */
-    "hide": function() {
-      if (!this.node) {
-        return;
-      }
-      this.node.attr("display", "none");
-    },
+		/**
+		 * Removes the tooltip from the dom
+		 */
+		"remove": function() {
+			this._tooltipArrow = null;
+			this._tooltipBG = null;
+			this._tooltipText = null;
+			this.node.remove();
+			this.node = null;
+		},
 
-    /**
-     * Removes the tooltip from the dom
-     */
-    "remove": function() {
-      this._tooltipArrow = null;
-      this._tooltipBG = null;
-      this._tooltipText = null;
-      this.node.remove();
-      this.node = null;
-    },
+		/**
+		 * Renders the tooltip
+		 * @param {String/Number} name	
+		 * @param {String/Number} value
+		 */
+		"render": function(title, details) {
 
-    /**
-     * Renders the tooltip
-     * @param  {String/Number} name  
-     * @param  {String/Number} value
-     */
-    "render": function(name, value) {
+			var paper = this._paper;
+			var tmpBBox = null;
 
-      var paper = this._paper;
-      var tmpBBox = null;
+			if (this.node !== null) {
+				this.remove();
+			}
+			this.node = paper.g();
 
-      if (this.node !== null) {
-        this.remove();
-      }
-      this.node = paper.g();
+			// Render the text
+			var tooltipText;
+			if (Object.prototype.toString.call(details) !== '[object Array]') {
+				var tooltipText = paper.text(
+					TOOLTIP_PADDING_LEFT,
+					TOOLTIP_PADDING_TOP,
+					title + ": " + details
+				)
+				tooltipText.attr({
+					"dy": parseInt(TEXT_SIZE_SMALL, 10)
+				});
+			} else {
+				var tooltipText = paper.g();
 
-      // Render the text
-      var tooltipText = paper.text( TOOLTIP_PADDING_LEFT, TOOLTIP_PADDING_TOP, name + ": " + value );
-      tooltipText.attr({
-        "dy": parseInt(TEXT_SIZE_SMALL,10),
-        "fill": "#fff",
-        "font-family": FONT_FAMILY,
-        "font-size": TEXT_SIZE_SMALL
-      });
-      this._tooltipText = tooltipText;
+				var titleText = paper.text(TOOLTIP_PADDING_LEFT, TOOLTIP_PADDING_TOP, title)
+				titleText.attr({
+					"dy": parseInt(TEXT_SIZE_SMALL, 10),
+				});
+				tooltipText.append(titleText);
 
-      // Render the background
-      tmpBBox = tooltipText.getBBox();
-      var tooltipBG = paper.rect( 0, 0, tmpBBox.width + TOOLTIP_PADDING_RIGHT + TOOLTIP_PADDING_LEFT, tmpBBox.height + TOOLTIP_PADDING_TOP + TOOLTIP_PADDING_BOTTOM, TOOLTIP_BORDER_RADIUS );
-      tooltipBG.attr({
-        "fill": "#3C3C3C"
-      });
-      this._tooltipBG = tooltipBG;
+				var detailTitles = paper.g();
+				var detailValues = paper.g();
+				var detailRowOffset = 0;
+				var largestDetailTitleWidth = 0;
+				var largestDetailValueWidth = 0;
+				details.forEach(function(detail) {
+					var detailTitleText = paper.text(
+						TOOLTIP_PADDING_LEFT,
+						TOOLTIP_PADDING_TOP + tooltipText.getBBox().height + detailRowOffset,
+						detail.title + ':'
+					);
+					detailTitleText.attr({
+						"dy": parseInt(TEXT_SIZE_SMALL, 10)
+					});
+					detailTitles.append(detailTitleText);
 
-      // Render the arrow
-      var tooltipArrow = paper.polygon([-3.5,0.2,6.5,-5,6.5,5]);
-      var tooltipArrowMask = paper.rect(-6,-6,11,12).attr("fill", "#fff");
-      tooltipArrow.attr({
-        "fill": "#3C3C3C",
-        "mask": tooltipArrowMask
-      });
-      this._tooltipArrow = tooltipArrow;
-      this._positionTooltipArrow( this._tooltipPlacement );
+					var detailValueText = paper.text(
+						TOOLTIP_PADDING_LEFT,
+						TOOLTIP_PADDING_TOP + tooltipText.getBBox().height + detailRowOffset,
+						detail.value
+					);
+					detailValueText.attr({
+						"dy": parseInt(TEXT_SIZE_SMALL, 10),
+						"text-anchor": "end"
+					});
+					detailValues.append(detailValueText);
+					
+					detailRowOffset += detailTitleText.getBBox().height;
+					
+					detailTitleTextBBox = detailTitleText.getBBox();
+					detailValueTextBBox = detailValueText.getBBox();
+					if (detailTitleTextBBox.width > largestDetailTitleWidth) {
+						largestDetailTitleWidth = detailTitleTextBBox.width;
+					}
+					if (detailValueTextBBox.width > largestDetailValueWidth) {
+						largestDetailValueWidth = detailValueTextBBox.width;
+					}
+				});
 
-      // Add to the group
-      this.node.append( tooltipBG );
-      this.node.append( tooltipText );
-      this.node.append( tooltipArrow );
+				detailValues.transform('t ' + (largestDetailTitleWidth + largestDetailValueWidth) + ' 0');
 
-      this.setStyles( this._styles );
+				tooltipText.append(detailTitles);
+				tooltipText.append(detailValues);
 
-      this.hide();
+			}
 
-    },
+			tooltipText.attr({
+				"fill": "#fff",
+				"font-family": FONT_FAMILY,
+				"font-size": TEXT_SIZE_SMALL
+			});
 
-    /**
-     * Sets the position for the tooltip to go
-     * @param  {Number} x                
-     * @param  {Number} y                
-     * @param  {String} tooltipPlacement The position for the tooltip to go
-     */
-    "setPosition": function(x, y, tooltipPlacement) {
+			this._tooltipText = tooltipText;
 
-      if (!this.node) {
-        return;
-      }
+			// Render the background
+			tmpBBox = tooltipText.getBBox();
+			var tooltipBG = paper.rect(
+				0,
+				0,
+				tmpBBox.width + TOOLTIP_PADDING_RIGHT + TOOLTIP_PADDING_LEFT,
+				tmpBBox.height + TOOLTIP_PADDING_TOP + TOOLTIP_PADDING_BOTTOM,
+				TOOLTIP_BORDER_RADIUS
+			);
+			tooltipBG.addClass(this.colorClass);
+			this._tooltipBG = tooltipBG;
 
-      if( tooltipPlacement === undefined ){
-        tooltipPlacement = this._tooltipPlacement;
-      } else if( tooltipPlacement !== this._tooltipPlacement ) {
-        this._positionTooltipArrow( tooltipPlacement );
-      }
+			titleText.transform('t ' + (tmpBBox.width / 2 - titleText.getBBox().width / 2) + ' 0');
 
-      var tooltipArrowBBox = this._tooltipArrow.getBBox(),
-          tooltipBGBBox = this._tooltipBG.getBBox();
+			// Render the arrow
+			var tooltipArrow = paper.polygon([-3.5, 0.2, 6.5, -5, 6.5, 5]);
+			var tooltipArrowMask = paper.rect(-6, -6, 11, 12).attr("fill", "#fff");
+			tooltipArrow.attr({
+				"mask": tooltipArrowMask
+			})
+				.addClass(this.colorClass);
+			this._tooltipArrow = tooltipArrow;
+			this._positionTooltipArrow(this._tooltipPlacement);
 
-      switch( tooltipPlacement ){
+			// Add to the group
+			this.node.append(tooltipBG);
+			this.node.append(tooltipText);
+			this.node.append(tooltipArrow);
 
-        case "left":
-          x = x - tooltipArrowBBox.width - tooltipBGBBox.width - TOOLTIP_OFFSET_X;
-          y = y - tooltipBGBBox.height/2;
-          break;
+			this.node.addClass('fm-label');
 
-        case "right":
-          x = x + tooltipArrowBBox.width + TOOLTIP_OFFSET_X;
-          y = y - tooltipBGBBox.height/2;
-          break;
-        
-        case "bottom":
-          x = x - tooltipBGBBox.width/2;
-          y = y + tooltipArrowBBox.height + TOOLTIP_OFFSET_Y;
-          break;
+			this.hide();
 
-        case "top":
-          x = x - tooltipBGBBox.width/2;
-          y = y - tooltipBGBBox.height - tooltipArrowBBox.height - TOOLTIP_OFFSET_Y + 10;
-          break;
+			return this.node;
+		},
 
-      }
+		/**
+		 * Sets the position for the tooltip to go
+		 * @param {Number} x								
+		 * @param {Number} y								
+		 * @param {String} tooltipPlacement The position for the tooltip to go
+		 */
+		"setPosition": function(x, y, tooltipPlacement) {
 
-      this.node.transform("T" + x + "," + y );
+			if (!this.node) {
+				return;
+			}
 
-    },
+			if( tooltipPlacement === undefined ){
+				tooltipPlacement = this._tooltipPlacement;
+			} else if(tooltipPlacement !== this._tooltipPlacement) {
+				this._positionTooltipArrow(tooltipPlacement);
+			}
 
-    /**
-     * Sets the styles of the tooltip
-     * @param  {Object} styles
-     */
-    "setStyles": function( styles ){
+			var tooltipArrowBBox = this._tooltipArrow.getBBox(),
+					tooltipBGBBox = this._tooltipBG.getBBox();
 
-      if( styles === undefined ){ return; }
+			switch(tooltipPlacement) {
 
-      if( typeof styles.arrow === "object" ){
-        this._tooltipArrow.attr( styles.arrow );
-      }
+				case "left":
+					x = x - tooltipArrowBBox.width - tooltipBGBBox.width - TOOLTIP_OFFSET_X;
+					y = y - tooltipBGBBox.height / 2;
+					break;
 
-      if( typeof styles.background === "object" ){
-        this._tooltipBG.attr( styles.background );
-      }
+				case "right":
+					x = x + tooltipArrowBBox.width + TOOLTIP_OFFSET_X;
+					y = y - tooltipBGBBox.height / 2;
+					break;
+				
+				case "bottom":
+					x = x - tooltipBGBBox.width / 2;
+					y = y + tooltipArrowBBox.height + TOOLTIP_OFFSET_Y;
+					break;
 
-      if( typeof styles.text === "object" ){
-        this._tooltipText.attr( styles.text );
-      }
+				case "top":
+					x = x - tooltipBGBBox.width / 2;
+					y = y - tooltipBGBBox.height - tooltipArrowBBox.height - TOOLTIP_OFFSET_Y + 10;
+					break;
 
-      this._styles = styles;
+			}
 
-    },
+			this.node.transform("T" + x + "," + y);
 
-    /**
-     * Show the tooltip
-     */
-    "show": function() {
-      if (!this.node) {
-        return;
-      }
-      this.node.parent().append( this.node );
-      this.node.attr("display", "block");
-    }
+		},
 
-  };
+		/**
+		 * Show the tooltip
+		 */
+		"show": function() {
+			if (!this.node) {
+				return;
+			}
+			this.node.parent().append(this.node);
+			this.node.attr("display", "block");
+		}
 
-  Tooltip.STYLES_PRIMARY = {
-    "arrow": {
-      "fill": "#3C3C3C",
-      "stroke": "none"
-    },
-    "background": {
-      "fill": "#3C3C3C",
-      "stroke": "none"
-    },
-    "text": {
-      "fill": "#fff"
-    }
-  };
+	};
 
-  Tooltip.STYLES_SECONDARY = {
-    "arrow": {
-      "fill": "#fff",
-      "stroke": "#3C3C3C",
-      "stroke-width": "2px"
-    },
-    "background": {
-      "fill": "#fff",
-      "stroke": "#3C3C3C",
-      "stroke-width": "2px"
-    },
-    "text": {
-      "fill": "#3C3C3C"
-    }
-  };
-
-  var dataColours = ["#ECB53E", "#8AC37E", "#88B25B", "#459C76", "#32AFE5", "#2A7FB9", "#385F8C", "#AE74AF", "#744589", "#A7305D", "#D03B43", "#DC8336"];
-  dataColours.forEach(function( colour, index ){
-
-    Tooltip[ "STYLES_COLOR_WHEEL_" + String.fromCharCode( 65 + index ) ] = {
-      "arrow": {
-        "fill": colour,
-        "stroke": "none"
-      },
-      "background": {
-        "fill": colour,
-        "stroke": "none"
-      },
-      "text": {
-        "fill": "#fff"
-      }
-    };
-
-  });
-
-  return Tooltip;
+	return Tooltip;
 
 });

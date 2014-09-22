@@ -1,11 +1,12 @@
 {
   "name": "Tooltip",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "authors": [
-    "Dan.Palmer@telegraph.co.uk"
+    "Dan.Palmer@telegraph.co.uk",
+    "ben.brown@factmint.com"
   ],
-  "description": "Tooltip class that displays a name and value",
-  "main": "dist/Tooltip.js",
+  "description": "Tooltip class that displays a name and value, or a title followed by a list of title/value pairs",
+  "main": "dist/tooltip.js",
   "moduleType": [
     "amd"
   ],
