@@ -158,8 +158,8 @@ define(function() {
 					
 					detailRowOffset += detailTitleText.getBBox().height;
 					
-					detailTitleTextBBox = detailTitleText.getBBox();
-					detailValueTextBBox = detailValueText.getBBox();
+					var detailTitleTextBBox = detailTitleText.getBBox();
+					var detailValueTextBBox = detailValueText.getBBox();
 					if (detailTitleTextBBox.width > largestDetailTitleWidth) {
 						largestDetailTitleWidth = detailTitleTextBBox.width;
 					}
