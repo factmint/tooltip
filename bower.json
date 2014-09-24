@@ -19,5 +19,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "multitext": "https://git.assembla.com/descartes_diaphragm.multitext.git"
+  }
 }
