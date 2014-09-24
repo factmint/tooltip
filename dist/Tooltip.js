@@ -1,4 +1,5 @@
-define(function() {
+define(['multitext'],
+function(multitext) {
 
 	var TOOLTIP_OFFSET_X = 10;
 	var TOOLTIP_OFFSET_Y = 20;
@@ -129,49 +130,32 @@ define(function() {
 				});
 				tooltipText.append(titleText);
 
-				var detailTitles = paper.g();
-				var detailValues = paper.g();
-				var detailRowOffset = 0;
-				var largestDetailTitleWidth = 0;
-				var largestDetailValueWidth = 0;
+				var detailTitles = [];
+				var detailValues = [];
 				details.forEach(function(detail) {
-					var detailTitleText = paper.text(
-						TOOLTIP_PADDING_LEFT,
-						TOOLTIP_PADDING_TOP + tooltipText.getBBox().height + detailRowOffset,
-						detail.title + ':'
-					);
-					detailTitleText.attr({
-						"dy": parseInt(TEXT_SIZE_SMALL, 10)
-					});
-					detailTitles.append(detailTitleText);
-
-					var detailValueText = paper.text(
-						TOOLTIP_PADDING_LEFT,
-						TOOLTIP_PADDING_TOP + tooltipText.getBBox().height + detailRowOffset,
-						detail.value
-					);
-					detailValueText.attr({
-						"dy": parseInt(TEXT_SIZE_SMALL, 10),
-						"text-anchor": "end"
-					});
-					detailValues.append(detailValueText);
-					
-					detailRowOffset += detailTitleText.getBBox().height;
-					
-					var detailTitleTextBBox = detailTitleText.getBBox();
-					var detailValueTextBBox = detailValueText.getBBox();
-					if (detailTitleTextBBox.width > largestDetailTitleWidth) {
-						largestDetailTitleWidth = detailTitleTextBBox.width;
-					}
-					if (detailValueTextBBox.width > largestDetailValueWidth) {
-						largestDetailValueWidth = detailValueTextBBox.width;
-					}
+					detailTitles.push(detail.title + ':');
+					detailValues.push(detail.value);
 				});
 
-				detailValues.transform('t ' + (largestDetailTitleWidth + largestDetailValueWidth) + ' 0');
+				var detailTitlesElement = paper.multitext(
+					TOOLTIP_PADDING_LEFT,
+					TOOLTIP_PADDING_TOP * 2 + titleText.getBBox().height,
+					detailTitles.join('\n'),
+					'1.2em'
+				);
 
-				tooltipText.append(detailTitles);
-				tooltipText.append(detailValues);
+				var detailValuesElement = paper.multitext(
+					TOOLTIP_PADDING_LEFT,
+					TOOLTIP_PADDING_TOP * 2 + titleText.getBBox().height,
+					detailValues.join('\n'),
+					'1.2em',
+					'end'
+				);
+
+				detailValuesElement.transform('t ' + (detailTitlesElement.getBBox().width + detailValuesElement.getBBox().width) + ' 0');
+				
+				tooltipText.append(detailTitlesElement);
+				tooltipText.append(detailValuesElement);
 
 			}
 
