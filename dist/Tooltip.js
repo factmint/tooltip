@@ -196,7 +196,7 @@ function(multitext) {
 			this.node.append(tooltipText);
 			this.node.append(tooltipArrow);
 
-			this.node.addClass('fm-label');
+			this.node.addClass('fm-tooltip');
 
 			this.hide();
 
