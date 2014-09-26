@@ -186,7 +186,7 @@ function(multitext) {
 			var tooltipArrow = paper.polygon([-5,0.2,5,-5,5,5])
 				.addClass(this.colorClass);
 			this._tooltipArrow = tooltipArrow;
-			this._positionTooltipArrow(this._tooltipPlacement);
+			this._positionTooltipArrow(this._tooltipPlacement); // Always try default position (useful for mouse move)
 
 			// Add to the group
 			this.node.append(tooltipBG);
