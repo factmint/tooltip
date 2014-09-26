@@ -112,7 +112,8 @@ function(multitext) {
 
 			// Render the text
 			var tooltipText;
-			if (Object.prototype.toString.call(details) !== '[object Array]') {
+			var isMultiLineLabel = (Object.prototype.toString.call(details) === '[object Array]') ? true : false;
+			if (! isMultiLineLabel) {
 				var tooltipText = paper.text(
 					TOOLTIP_PADDING_LEFT,
 					TOOLTIP_PADDING_TOP,
@@ -179,7 +180,9 @@ function(multitext) {
 			tooltipBG.addClass(this.colorClass);
 			this._tooltipBG = tooltipBG;
 
-			titleText.transform('t ' + (tmpBBox.width / 2 - titleText.getBBox().width / 2) + ' 0');
+			if (isMultiLineLabel) {
+				titleText.transform('t ' + (tmpBBox.width / 2 - titleText.getBBox().width / 2) + ' 0');
+			}
 
 			// Render the arrow
 			var tooltipArrow = paper.polygon([-3.5, 0.2, 6.5, -5, 6.5, 5]);
