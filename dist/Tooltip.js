@@ -1,8 +1,6 @@
 define(['multitext'],
 function(multitext) {
 
-	var TOOLTIP_OFFSET_X = 10;
-	var TOOLTIP_OFFSET_Y = 20;
 	var TOOLTIP_PADDING_TOP = 10;
 	var TOOLTIP_PADDING_BOTTOM = 10;
 	var TOOLTIP_PADDING_LEFT = 10;
