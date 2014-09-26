@@ -240,7 +240,7 @@ function(multitext) {
 
 				case "top":
 					x = x - tooltipBGBBox.width / 2;
-					y = y - tooltipBGBBox.height - tooltipArrowBBox.height + 10;
+					y = y - tooltipBGBBox.height - tooltipArrowBBox.height;
 					break;
 
 			}
