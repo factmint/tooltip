@@ -230,23 +230,23 @@ function(multitext) {
 			switch(tooltipPlacement) {
 
 				case "left":
-					x = x - tooltipArrowBBox.width - tooltipBGBBox.width - TOOLTIP_OFFSET_X;
+					x = x - tooltipArrowBBox.width - tooltipBGBBox.width;
 					y = y - tooltipBGBBox.height / 2;
 					break;
 
 				case "right":
-					x = x + tooltipArrowBBox.width + TOOLTIP_OFFSET_X;
+					x = x + tooltipArrowBBox.width;
 					y = y - tooltipBGBBox.height / 2;
 					break;
 				
 				case "bottom":
 					x = x - tooltipBGBBox.width / 2;
-					y = y + tooltipArrowBBox.height + TOOLTIP_OFFSET_Y;
+					y = y + tooltipArrowBBox.height;
 					break;
 
 				case "top":
 					x = x - tooltipBGBBox.width / 2;
-					y = y - tooltipBGBBox.height - tooltipArrowBBox.height - TOOLTIP_OFFSET_Y + 10;
+					y = y - tooltipBGBBox.height - tooltipArrowBBox.height + 10;
 					break;
 
 			}
