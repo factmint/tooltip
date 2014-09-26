@@ -183,11 +183,7 @@ function(multitext) {
 			}
 
 			// Render the arrow
-			var tooltipArrow = paper.polygon([-3.5, 0.2, 6.5, -5, 6.5, 5]);
-			var tooltipArrowMask = paper.rect(-6, -6, 11, 12).attr("fill", "#fff");
-			tooltipArrow.attr({
-				"mask": tooltipArrowMask
-			})
+			var tooltipArrow = paper.polygon([-5,0.2,5,-5,5,5])
 				.addClass(this.colorClass);
 			this._tooltipArrow = tooltipArrow;
 			this._positionTooltipArrow(this._tooltipPlacement);
@@ -222,8 +218,8 @@ function(multitext) {
 				this._positionTooltipArrow(tooltipPlacement);
 			}
 
-			var tooltipArrowBBox = this._tooltipArrow.getBBox(),
-					tooltipBGBBox = this._tooltipBG.getBBox();
+			var tooltipArrowBBox = this._tooltipArrow.getBBox();
+			var tooltipBGBBox = this._tooltipBG.getBBox();
 
 			switch(tooltipPlacement) {
 
