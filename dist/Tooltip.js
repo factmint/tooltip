@@ -1,5 +1,5 @@
-define(['multitext'],
-function(multitext) {
+define(['config', 'multitext'],
+function(Config,   multitext) {
 
 	var TOOLTIP_PADDING_TOP = 10;
 	var TOOLTIP_PADDING_BOTTOM = 10;
@@ -9,6 +9,13 @@ function(multitext) {
 
 	var TEXT_SIZE_SMALL = "12px";
 	var FONT_FAMILY = "'Lato', sans-serif";
+
+	var TOOLTIP_MAX_VALUE_LENGTH;
+	if (Config.TOOLTIP_MAX_VALUE_LENGTH) {
+		TOOLTIP_MAX_VALUE_LENGTH = Config.TOOLTIP_MAX_VALUE_LENGTH;
+	} else {
+		TOOLTIP_MAX_VALUE_LENGTH: 20;
+	}
 
 	function Tooltip(paper, colorClass) {
 
@@ -36,7 +43,7 @@ function(multitext) {
 			var transformMatrix = Snap.matrix();
 			var tooltipBGBBox = this._tooltipBG.getBBox();
 
-			switch(tooltipPlacement){
+			switch (tooltipPlacement) {
 
 				case "left":
 					transformMatrix.translate(tooltipBGBBox.width + 4, tooltipBGBBox.height / 2);
@@ -111,6 +118,9 @@ function(multitext) {
 			// Render the text
 			var tooltipText;
 			var isMultiLineLabel = (Object.prototype.toString.call(details) === '[object Array]') ? true : false;
+			if (title.length > TOOLTIP_MAX_VALUE_LENGTH) {
+				title = title.substring(0, TOOLTIP_MAX_VALUE_LENGTH - 3) + '...';
+			}
 			if (! isMultiLineLabel) {
 				var tooltipText = paper.text(
 					TOOLTIP_PADDING_LEFT,
@@ -132,8 +142,22 @@ function(multitext) {
 				var detailTitles = [];
 				var detailValues = [];
 				details.forEach(function(detail) {
-					detailTitles.push(detail.title + ':');
-					detailValues.push(detail.value);
+					var detailTitle;
+					var detailValue;
+					
+					if (detail.title.length > TOOLTIP_MAX_VALUE_LENGTH) {
+						detailTitle = detail.title.substring(0, TOOLTIP_MAX_VALUE_LENGTH - 3) + '...';
+					} else {
+						detailTitle = detail.title;
+					}
+					if (detail.value.length > TOOLTIP_MAX_VALUE_LENGTH) {
+						detailValue = detail.value.substring(0, TOOLTIP_MAX_VALUE_LENGTH - 3) + '...';
+					} else {
+						detailValue = detail.value;
+					}
+
+					detailTitles.push(detailTitle + ':');
+					detailValues.push(detailValue);
 				});
 
 				var detailTitlesElement = paper.multitext(
