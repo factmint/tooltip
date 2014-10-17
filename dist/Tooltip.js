@@ -1,20 +1,22 @@
 define(['config', 'multitext'],
 function(Config,   multitext) {
 
-	var TOOLTIP_PADDING_TOP = 10;
-	var TOOLTIP_PADDING_BOTTOM = 10;
-	var TOOLTIP_PADDING_LEFT = 10;
-	var TOOLTIP_PADDING_RIGHT = 10;
-	var TOOLTIP_BORDER_RADIUS = 4;
+	var PADDING_TOP = 10;
+	var PADDING_BOTTOM = 10;
+	var PADDING_LEFT = 10;
+	var PADDING_RIGHT = 10;
+	var TITLE_MARGIN_BOTTOM = 5;
+	var DETAIL_MARGIN_LEFT = 5;
+	var BORDER_RADIUS = 4;
 
 	var TEXT_SIZE_SMALL = "12px";
 	var FONT_FAMILY = "'Lato', sans-serif";
 
-	var TOOLTIP_MAX_VALUE_LENGTH;
+	var MAX_VALUE_LENGTH;
 	if (Config.TOOLTIP_MAX_VALUE_LENGTH) {
-		TOOLTIP_MAX_VALUE_LENGTH = Config.TOOLTIP_MAX_VALUE_LENGTH;
+		MAX_VALUE_LENGTH = Config.TOOLTIP_MAX_VALUE_LENGTH;
 	} else {
-		TOOLTIP_MAX_VALUE_LENGTH: 20;
+		MAX_VALUE_LENGTH: 20;
 	}
 
 	function Tooltip(paper, colorClass) {
@@ -118,13 +120,13 @@ function(Config,   multitext) {
 			// Render the text
 			var tooltipText;
 			var isMultiLineLabel = (Object.prototype.toString.call(details) === '[object Array]') ? true : false;
-			if (title.length > TOOLTIP_MAX_VALUE_LENGTH) {
-				title = title.substring(0, TOOLTIP_MAX_VALUE_LENGTH - 3) + '...';
+			if (title.length > MAX_VALUE_LENGTH) {
+				title = title.substring(0, MAX_VALUE_LENGTH - 3) + '...';
 			}
 			if (! isMultiLineLabel) {
 				var tooltipText = paper.text(
-					TOOLTIP_PADDING_LEFT,
-					TOOLTIP_PADDING_TOP,
+					PADDING_LEFT,
+					PADDING_TOP,
 					title + ": " + details
 				)
 				tooltipText.attr({
@@ -132,10 +134,15 @@ function(Config,   multitext) {
 				});
 			} else {
 				var tooltipText = paper.g();
+				tooltipText.attr({
+					"fill": "#fff"
+				});
 
-				var titleText = paper.text(TOOLTIP_PADDING_LEFT, TOOLTIP_PADDING_TOP, title)
+				var titleText = paper.text(PADDING_LEFT, PADDING_TOP, title)
 				titleText.attr({
 					"dy": parseInt(TEXT_SIZE_SMALL, 10),
+					"font-family": FONT_FAMILY,
+					"font-size": TEXT_SIZE_SMALL
 				});
 				tooltipText.append(titleText);
 
@@ -145,13 +152,13 @@ function(Config,   multitext) {
 					var detailTitle;
 					var detailValue;
 					
-					if (detail.title.length > TOOLTIP_MAX_VALUE_LENGTH) {
-						detailTitle = detail.title.substring(0, TOOLTIP_MAX_VALUE_LENGTH - 3) + '...';
+					if (detail.title.length > MAX_VALUE_LENGTH) {
+						detailTitle = detail.title.substring(0, MAX_VALUE_LENGTH - 3) + '...';
 					} else {
 						detailTitle = detail.title;
 					}
-					if (detail.value.length > TOOLTIP_MAX_VALUE_LENGTH) {
-						detailValue = detail.value.substring(0, TOOLTIP_MAX_VALUE_LENGTH - 3) + '...';
+					if (detail.value.length > MAX_VALUE_LENGTH) {
+						detailValue = detail.value.substring(0, MAX_VALUE_LENGTH - 3) + '...';
 					} else {
 						detailValue = detail.value;
 					}
@@ -161,32 +168,32 @@ function(Config,   multitext) {
 				});
 
 				var detailTitlesElement = paper.multitext(
-					TOOLTIP_PADDING_LEFT,
-					TOOLTIP_PADDING_TOP * 2 + titleText.getBBox().height,
+					PADDING_LEFT,
+					PADDING_TOP * 2 + titleText.getBBox().height + TITLE_MARGIN_BOTTOM,
 					detailTitles.join('\n'),
 					'1.2em'
-				);
+				).attr({
+					"font-family": FONT_FAMILY,
+					"font-size": TEXT_SIZE_SMALL
+				});
 
 				var detailValuesElement = paper.multitext(
-					TOOLTIP_PADDING_LEFT,
-					TOOLTIP_PADDING_TOP * 2 + titleText.getBBox().height,
+					PADDING_LEFT,
+					PADDING_TOP * 2 + titleText.getBBox().height + TITLE_MARGIN_BOTTOM,
 					detailValues.join('\n'),
 					'1.2em',
 					'end'
-				);
+				).attr({
+					"font-family": FONT_FAMILY,
+					"font-size": TEXT_SIZE_SMALL
+				});
 
-				detailValuesElement.transform('t ' + (detailTitlesElement.getBBox().width + detailValuesElement.getBBox().width) + ' 0');
+				detailValuesElement.transform('t ' + (detailTitlesElement.getBBox().width + detailValuesElement.getBBox().width + DETAIL_MARGIN_LEFT) + ' 0');
 				
 				tooltipText.append(detailTitlesElement);
 				tooltipText.append(detailValuesElement);
 
 			}
-
-			tooltipText.attr({
-				"fill": "#fff",
-				"font-family": FONT_FAMILY,
-				"font-size": TEXT_SIZE_SMALL
-			});
 
 			this._tooltipText = tooltipText;
 
@@ -195,9 +202,9 @@ function(Config,   multitext) {
 			var tooltipBG = paper.rect(
 				0,
 				0,
-				tmpBBox.width + TOOLTIP_PADDING_RIGHT + TOOLTIP_PADDING_LEFT,
-				tmpBBox.height + TOOLTIP_PADDING_TOP + TOOLTIP_PADDING_BOTTOM,
-				TOOLTIP_BORDER_RADIUS
+				tmpBBox.width + PADDING_RIGHT + PADDING_LEFT,
+				tmpBBox.height + PADDING_TOP + PADDING_BOTTOM,
+				BORDER_RADIUS
 			);
 			tooltipBG.addClass(this.colorClass);
 			this._tooltipBG = tooltipBG;
