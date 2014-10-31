@@ -243,9 +243,11 @@ function(Config,   multitext) {
 
 			this.hide();
 			
-			this.snapElement.attr({
-				filter: 'url(#black-border)'
-			});
+			if (this.enableBlackBorder) {
+				this.snapElement.attr({
+					filter: 'url(#black-border)'
+				});
+			}
 
 			return this.snapElement;
 		},
