@@ -19,7 +19,22 @@ function(Config,   multitext) {
 		MAX_VALUE_LENGTH: 20;
 	}
 
-	function Tooltip(paper, colorClass) {
+	function Tooltip(paper, colorClass, enableBlackBorder) {
+		
+		this.enableBlackBorder = enableBlackBorder;
+		if (enableBlackBorder && ! document.getElementById('black-border')) {
+			paper.node.querySelector('defs').innerHTML += 
+						'<filter id="black-border" x="-5%" y="-5%" width="110%" height="110%">'
+					+		'<feMorphology in="SourceAlpha" operator="dilate" radius="1" result="border"></feMorphology>'
+					+		'<feGaussianBlur stdDeviation="0.2" in="border" result="blurred-border"></feGaussianBlur>'
+					+		'<feMerge>'
+  					+			'<feMergeNode in="blurred-border">'
+  					+			'</feMergeNode>'
+  					+			'<feMergeNode in="SourceGraphic">'
+  					+			'</feMergeNode>'
+					+		'</feMerge>'
+					+	'</filter>';
+		}
 
 		this.colorClass = colorClass;
 		this._paper = paper;
@@ -29,7 +44,7 @@ function(Config,   multitext) {
 		this._tooltipPlacement = "right";
 		this._tooltipText = null;
 
-		this.node = null;
+		this.snapElement = null;
 
 	}
 
@@ -85,10 +100,10 @@ function(Config,   multitext) {
 		 * Hides the tooltip
 		 */
 		"hide": function() {
-			if (!this.node) {
+			if (!this.snapElement) {
 				return;
 			}
-			this.node.attr("display", "none");
+			this.snapElement.attr("display", "none");
 		},
 
 		/**
@@ -98,8 +113,8 @@ function(Config,   multitext) {
 			this._tooltipArrow = null;
 			this._tooltipBG = null;
 			this._tooltipText = null;
-			this.node.remove();
-			this.node = null;
+			this.snapElement.remove();
+			this.snapElement = null;
 		},
 
 		/**
@@ -112,10 +127,10 @@ function(Config,   multitext) {
 			var paper = this._paper;
 			var tmpBBox = null;
 
-			if (this.node !== null) {
+			if (this.snapElement !== null) {
 				this.remove();
 			}
-			this.node = paper.g();
+			this.snapElement = paper.g();
 
 			// Render the text
 			var tooltipText;
@@ -220,15 +235,19 @@ function(Config,   multitext) {
 			this._positionTooltipArrow(this._tooltipPlacement); // Always try default position (useful for mouse move)
 
 			// Add to the group
-			this.node.append(tooltipBG);
-			this.node.append(tooltipText);
-			this.node.append(tooltipArrow);
+			this.snapElement.append(tooltipBG);
+			this.snapElement.append(tooltipText);
+			this.snapElement.append(tooltipArrow);
 
-			this.node.addClass('fm-tooltip');
+			this.snapElement.addClass('fm-tooltip');
 
 			this.hide();
+			
+			this.snapElement.attr({
+				filter: 'url(#black-border)'
+			});
 
-			return this.node;
+			return this.snapElement;
 		},
 
 		/**
@@ -239,7 +258,7 @@ function(Config,   multitext) {
 		 */
 		"setPosition": function(x, y, tooltipPlacement) {
 
-			if (!this.node) {
+			if (!this.snapElement) {
 				return;
 			}
 
@@ -276,7 +295,7 @@ function(Config,   multitext) {
 
 			}
 
-			this.node.transform("T" + x + "," + y);
+			this.snapElement.transform("T" + x + "," + y);
 
 		},
 
@@ -284,11 +303,11 @@ function(Config,   multitext) {
 		 * Show the tooltip
 		 */
 		"show": function() {
-			if (!this.node) {
+			if (!this.snapElement) {
 				return;
 			}
-			this.node.parent().append(this.node);
-			this.node.attr("display", "block");
+			this.snapElement.parent().append(this.snapElement);
+			this.snapElement.attr("display", "block");
 		}
 
 	};
