@@ -19,7 +19,7 @@ function(Config,   multitext) {
 		MAX_VALUE_LENGTH: 20;
 	}
 
-	function Tooltip(paper, colorClass, enableBlackBorder) {
+	function Tooltip(paper, tooltipClass, colorClass, enableBlackBorder) {
 		
 		this.enableBlackBorder = enableBlackBorder;
 		if (enableBlackBorder && ! document.getElementById('black-border')) {
@@ -36,6 +36,8 @@ function(Config,   multitext) {
 					+	'</filter>';
 		}
 
+
+		this.tooltipClass = tooltipClass;
 		this.colorClass = colorClass;
 		this._paper = paper;
 		this._parent = paper.node;
@@ -143,7 +145,7 @@ function(Config,   multitext) {
 					PADDING_LEFT,
 					PADDING_TOP,
 					title + ": " + details
-				)
+				);
 				tooltipText.attr({
 					"dy": parseInt(TEXT_SIZE_SMALL, 10)
 				});
@@ -212,6 +214,8 @@ function(Config,   multitext) {
 
 			this._tooltipText = tooltipText;
 
+			this.snapElement.append(tooltipText);
+
 			// Render the background
 			tmpBBox = tooltipText.getBBox();
 			var tooltipBG = paper.rect(
@@ -235,11 +239,10 @@ function(Config,   multitext) {
 			this._positionTooltipArrow(this._tooltipPlacement); // Always try default position (useful for mouse move)
 
 			// Add to the group
-			this.snapElement.append(tooltipBG);
-			this.snapElement.append(tooltipText);
+			this.snapElement.prepend(tooltipBG);
 			this.snapElement.append(tooltipArrow);
 
-			this.snapElement.addClass('fm-tooltip');
+			this.snapElement.addClass('fm-tooltip ' + this.tooltipClass);
 
 			this.hide();
 			
