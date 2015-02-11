@@ -215,6 +215,7 @@ function(Config,   multitext) {
 			this._tooltipText = tooltipText;
 
 			this.snapElement.append(tooltipText);
+			this.snapElement.addClass('fm-tooltip ' + this.tooltipClass);
 
 			// Render the background
 			tmpBBox = tooltipText.getBBox();
@@ -241,8 +242,6 @@ function(Config,   multitext) {
 			// Add to the group
 			this.snapElement.prepend(tooltipBG);
 			this.snapElement.append(tooltipArrow);
-
-			this.snapElement.addClass('fm-tooltip ' + this.tooltipClass);
 
 			this.hide();
 			
