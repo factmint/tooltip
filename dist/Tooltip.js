@@ -229,7 +229,7 @@ function(Config,   multitext) {
 			);
 			tooltipBG.addClass(this.colorClass);
 			if (this.colorOverride) {
-				tooltipBG.attr({style: 'background-color: ' + this.colorOverride});
+				tooltipBG.attr({fill: this.colorOverride});
 			}
 			this._tooltipBG = tooltipBG;
 
@@ -242,7 +242,7 @@ function(Config,   multitext) {
 				.addClass(this.colorClass);
 
 			if (this.colorOverride) {
-				tooltipArrow.attr({style: 'background-color: ' + this.colorOverride});
+				tooltipArrow.attr({fill: this.colorOverride});
 			}
 			this._tooltipArrow = tooltipArrow;
 			this._positionTooltipArrow(this._tooltipPlacement); // Always try default position (useful for mouse move)
