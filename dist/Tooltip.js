@@ -19,7 +19,7 @@ function(Config,   multitext) {
 		MAX_VALUE_LENGTH: 20;
 	}
 
-	function Tooltip(paper, tooltipClass, colorClass, enableBlackBorder) {
+	function Tooltip(paper, tooltipClass, colorClass, enableBlackBorder, colorOverride) {
 		
 		this.enableBlackBorder = enableBlackBorder;
 		if (enableBlackBorder && ! document.getElementById('black-border')) {
@@ -39,6 +39,7 @@ function(Config,   multitext) {
 
 		this.tooltipClass = tooltipClass;
 		this.colorClass = colorClass;
+		this.colorOverride = colorOverride;
 		this._paper = paper;
 		this._parent = paper.node;
 		this._tooltipArrow = null;
@@ -227,6 +228,9 @@ function(Config,   multitext) {
 				BORDER_RADIUS
 			);
 			tooltipBG.addClass(this.colorClass);
+			if (this.colorOverride) {
+				tooltipBG.attr({style: 'background-color: ' + this.colorOverride});
+			}
 			this._tooltipBG = tooltipBG;
 
 			if (isMultiLineLabel) {
@@ -236,6 +240,10 @@ function(Config,   multitext) {
 			// Render the arrow
 			var tooltipArrow = paper.polygon([-5,0.2,5,-5,5,5])
 				.addClass(this.colorClass);
+
+			if (this.colorOverride) {
+				tooltipArrow.attr({style: 'background-color: ' + this.colorOverride});
+			}
 			this._tooltipArrow = tooltipArrow;
 			this._positionTooltipArrow(this._tooltipPlacement); // Always try default position (useful for mouse move)
 
