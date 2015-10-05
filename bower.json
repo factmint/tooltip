@@ -21,6 +21,6 @@
     "tests"
   ],
   "dependencies": {
-    "multitext": "https://git.assembla.com/descartes_diaphragm.multitext.git"
+    "multitext": "https://github.com/factmint/multitext.git"
   }
 }
